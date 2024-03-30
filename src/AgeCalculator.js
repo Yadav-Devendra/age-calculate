@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function AgeCalculator() {
   const [yearOfBirth, setYearOfBirth] = useState('');
   const [age, setAge] = useState(null);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const currentYear = new Date().getFullYear();
@@ -12,6 +13,14 @@ function AgeCalculator() {
 
     if (calculatedAge >= 0) {
       setAge(calculatedAge);
+
+      // Send data to the server
+      try {
+        const response = await axios.post('/api/ages', { yearOfBirth });
+        console.log('Age data saved successfully:', response.data);
+      } catch (err) {
+        console.error('Error saving age data:', err);
+      }
     } else {
       setAge('Invalid year of birth');
     }
